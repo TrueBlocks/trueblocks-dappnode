@@ -1,0 +1,66 @@
+version: "2"
+fields:
+  - id: MAINNET_RPCPROVIDER
+    target:
+      type: environment
+      name: TB_CHAINS_MAINNET_RPCPROVIDER
+      service: [core, monitor]
+    title: Mainnet JSON RPC Provider
+    description: >-
+      Target JSON RPC Provider URL for mainnet (should support Archive & Trace)
+    secret: false
+    required: true
+
+  - id: ETHERSCAN_KEY
+    target:
+      type: environment
+      name: TB_ETHERSCAN_KEY
+      service: [core, monitor]
+    title: Etherscan API Key
+    description: >-
+      Etherscan API key is used to download ABI data
+    secret: false
+    required: true
+
+  - id: RUN_SCRAPER
+    target:
+      type: environment
+      name: RUN_SCRAPER
+      service: core
+    title: Run Scraper?
+    description: >-
+      Scan the chain and update the TrueBlocks index of appearances. This requires and endpoint that supports trace_* methods as your RPC Provider (not geth).
+    enum:
+      - "true"
+      - "false"
+    secret: false
+    required: false
+
+  - id: BOOTSTRAP_BLOOM_FILTERS
+    target:
+      type: environment
+      name: BOOTSTRAP_BLOOM_FILTERS
+      service: core
+    title: Download Bloom Filters
+    description: >-
+      Download mainnet bloom filters on startup? Otherwise they must be generated locally. This is recommended (~3GB).
+    enum:
+      - "true"
+      - "false"
+    secret: false
+    required: true
+
+  - id: BOOTSTRAP_FULL_INDEX
+    target:
+      type: environment
+      name: BOOTSTRAP_FULL_INDEX
+      service: core
+    title: Download Full Index
+    description: >-
+      Download the entire mainnet index on startup? This is NOT recommended as it takes up considerable space (~80GB).
+    enum:
+      - "true"
+      - "false"
+    if: { "BOOTSTRAP_BLOOM_FILTERS": { "enum": ["true"] } }
+    secret: false
+    required: false

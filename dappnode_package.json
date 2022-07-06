@@ -1,0 +1,31 @@
+{
+  "name": "core.trueblocks.public.dappnode.eth",
+  "version": "0.37.0",
+  "shortDescription": "Lightweight indexing for any EVM-based blockchain",
+  "description": "TrueBlocks is a collection of libraries, tools, and applications that improve access to the Ethereum data while remaining fully local.",
+  "type": "service",
+  "chain": "ethereum",
+  "mainService": "core",
+  "author": "TrueBlocks, LLC. (https://trueblocks.io)",
+  "contributors": [],
+  "categories": ["Developer tools", "Blockchain", "Communications"],
+  "keywords": ["trueblocks", "index", "indexing", "ipfs", "data"],
+  "globalEnvs": {
+    "all": true
+  },
+  "backup": [],
+  "exposable": [],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/TrueBlocks/trueblocks-dappnode"
+  },
+  "bugs": {
+    "url": "https://github.com/TrueBlocks/trueblocks-dappnode/issues"
+  },
+  "links": {
+    "api": "http://core.trueblocks.dappnode:8080",
+    "readme": "https://github.com/TrueBlocks/trueblocks-dappnode",
+    "homepage": "https://trueblocks.io"
+  },
+  "license": "GLP-3.0"
+}

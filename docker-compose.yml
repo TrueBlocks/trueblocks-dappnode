@@ -1,0 +1,37 @@
+version: "3.4"
+services:
+  core:
+    image: "trueblocks/core:0.37.0-beta"
+    ports:
+      - "8080:8080"
+    environment:
+      TB_DEFAULTCHAIN: mainnet
+      TB_CHAINS_MAINNET_CHAINID: 1
+      TB_CHAINS_MAINNET_SYMBOL: ETH
+      TB_CHAINS_MAINNET_PINGATEWAY: "https://ipfs.unchainedindex.io/ipfs/"
+      TB_CHAINS_MAINNET_LOCALEXPLORER: "http://localhost:1234"
+      TB_CHAINS_MAINNET_REMOTEEXPLORER: "https://etherscan.io"
+    restart: unless-stopped
+    volumes:
+      - "Index:/index"
+      - "Cache:/cache"
+  monitor:
+    depends_on:
+      - core
+    restart: unless-stopped
+    image: "trueblocks/monitors-watch:0.37.0-beta"
+    environment:
+      TB_DEFAULTCHAIN: mainnet
+      TB_CHAINS_MAINNET_CHAINID: 1
+      TB_CHAINS_MAINNET_SYMBOL: ETH
+      TB_CHAINS_MAINNET_PINGATEWAY: "https://ipfs.unchainedindex.io/ipfs/"
+    volumes:
+      - "Index:/index"
+      - "Cache:/cache"
+      - "exports:/exports"
+      - "addresses:/addresses"
+volumes:
+  Index: {}
+  Cache: {}
+  exports: {}
+  addresses: {}
