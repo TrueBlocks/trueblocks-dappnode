@@ -2,20 +2,23 @@ version: "3.4"
 services:
   core:
     image: "trueblocks/core:0.37.0-beta"
-    ports:
-      - "8080:8080"
     environment:
       TB_DEFAULTCHAIN: mainnet
       TB_CHAINS_MAINNET_CHAINID: 1
+      TB_CHAINS_MAINNET_RPCPROVIDER: null
       TB_CHAINS_MAINNET_SYMBOL: ETH
       TB_CHAINS_MAINNET_PINGATEWAY: "https://ipfs.unchainedindex.io/ipfs/"
       TB_CHAINS_MAINNET_LOCALEXPLORER: "http://localhost:1234"
       TB_CHAINS_MAINNET_REMOTEEXPLORER: "https://etherscan.io"
+      TB_ETHERSCAN_KEY: null
+      RUN_SCRAPER: null
+      BOOTSTRAP_BLOOM_FILTERS: null
+      BOOTSTRAP_FULL_INDEX: null
     restart: unless-stopped
     volumes:
       - "Index:/index"
       - "Cache:/cache"
-  monitor:
+  monitors-watch:
     depends_on:
       - core
     restart: unless-stopped
@@ -23,8 +26,11 @@ services:
     environment:
       TB_DEFAULTCHAIN: mainnet
       TB_CHAINS_MAINNET_CHAINID: 1
+      TB_CHAINS_MAINNET_RPCPROVIDER: null
       TB_CHAINS_MAINNET_SYMBOL: ETH
       TB_CHAINS_MAINNET_PINGATEWAY: "https://ipfs.unchainedindex.io/ipfs/"
+      TB_ETHERSCAN_KEY: null
+      MONITORS_WATCH_FILE: export --appearances
     volumes:
       - "Index:/index"
       - "Cache:/cache"
