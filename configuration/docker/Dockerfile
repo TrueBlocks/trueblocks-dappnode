@@ -2,8 +2,7 @@
 FROM golang:1.18-alpine as builder
 
 # Install build depenedencies
-# RUN apk --no-cache add g++ gcc make cmake git nano libcurl python3 python3-dev \
-#         curl bash curl-dev linux-headers sqlite-dev
+RUN apk --no-cache add git nano
 
 # Set workdir
 WORKDIR /root
@@ -21,11 +20,11 @@ RUN git clone -b "${UPSTREAM_VER}" --single-branch --progress --depth 1 \
 FROM alpine:latest
 
 # Install binary dependencies and nice to haves
-# RUN apk --no-cache add gzip libstdc++ libgcc libcurl python3 python3-dev procps bash curl nano
+RUN apk --no-cache add nano
 
 # Copy files from builder
-COPY --from=builder /root/trueblocks-dappnode/configuration/server /app
-COPY --from=builder /root/trueblocks-dappnode/configuration/static /app
+COPY --from=builder /root/trueblocks-dappnode/configuration/server /app/server
+COPY --from=builder /root/trueblocks-dappnode/configuration/static /app/static
 
 # Run entrypoint
-ENTRYPOINT /root/trueblocks-dappnode/configuration/server
+ENTRYPOINT /app/server
