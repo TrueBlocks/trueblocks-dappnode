@@ -18,6 +18,7 @@ services:
     volumes:
       - "Index:/index"
       - "Cache:/cache"
+      - "configuration:/configuration"
   monitors-watch:
     depends_on:
       - core
@@ -36,8 +37,16 @@ services:
       - "Cache:/cache"
       - "exports:/exports"
       - "addresses:/addresses"
+      - "configuration:/configuration"
+  config:
+    image: "trueblocks/configurator"
+    build: ./configurator/docker
+    restart: unless-stopped
+    volumes:
+      - "configuration:/output"
 volumes:
   Index: {}
   Cache: {}
   exports: {}
   addresses: {}
+  configuration: {}
