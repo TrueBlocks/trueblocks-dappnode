@@ -1,8 +1,9 @@
 version: "3.4"
 services:
   core:
-    image: "trueblocks/core:0.37.0-beta"
+    image: trueblocks_core_conf
     environment:
+      REQUIRE_CONFIGURATION_TOOL: true
       TB_DEFAULTCHAIN: mainnet
       TB_CHAINS_MAINNET_CHAINID: 1
       TB_CHAINS_MAINNET_RPCPROVIDER: null
@@ -39,8 +40,11 @@ services:
       - "addresses:/addresses"
       - "configuration:/configuration"
   config:
-    image: "trueblocks/configurator"
-    build: ./configurator/docker
+    image: "config.trueblocks.public.dappnode.eth:0.37.0"
+    build:
+      context: ./configuration/docker
+      args:
+        UPSTREAM_VER: feature/configuration_tool
     restart: unless-stopped
     volumes:
       - "configuration:/output"

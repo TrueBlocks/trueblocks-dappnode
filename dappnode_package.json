@@ -24,6 +24,7 @@
   },
   "links": {
     "api": "http://trueblocks.public.dappnode:8080",
+    "configuration": "http://config.trueblocks.public.dappnode",
     "readme": "https://github.com/TrueBlocks/trueblocks-dappnode",
     "homepage": "https://trueblocks.io"
   },

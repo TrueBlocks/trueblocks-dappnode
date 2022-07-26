@@ -2,7 +2,7 @@
 <html>
 <head>
 	<meta charset="utf-8">
-	<title>A static page</title>
+	<title>Configure TrueBlocks</title>
 	<style>
         html {
             font-size: 10px;
@@ -103,6 +103,10 @@
             gap: 1rem;
         }
 
+        form#mainForm h1 {
+            font-size: 1.8rem;
+        }
+
         form[method=dialog] {
             display: flex;
             justify-content: space-between;
@@ -113,8 +117,18 @@
             box-shadow: .4rem .4rem #204a6c;
         }
 
-        form#mainForm fieldset {
+        fieldset[name=global] {
+            background: none;
+            border: none;
+            box-shadow: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        form#mainForm fieldset:not([name=global]) {
             background: white;
+            display: flex;
+            flex-direction: column;
         }
 
         label, .field {
@@ -123,12 +137,41 @@
             gap: .4rem;
         }
 
-        label {
+        label, .choice {
             margin: 0 0 1rem 0;
         }
 
-        label span:not(.error) {
-            width: 18rem;
+        .choice {
+            display: grid;
+            grid-template-rows: auto auto;
+            grid-template-columns: 1fr 1fr;
+            grid-template-areas: "label inputs"
+                                 "explainer explainer";
+        }
+
+        .choice .explainer {
+            grid-area: explainer;
+            font-style: italic;
+            font-size: small;
+            margin: 0;
+        }
+
+        .choice label {
+            flex-direction: row;
+        }
+
+        .choice input {
+            width: auto;
+        }
+
+        .choice .field {
+            grid-area: inputs;
+            flex-direction: row;
+            align-items: center;
+        }
+
+        .choice > span:first-child {
+            grid-area: label;
         }
 
         label.required span:not(.error) {
@@ -152,12 +195,31 @@
             display: block;
         }
 
+        form#mainForm .remove-button {
+            margin: .6rem 0 0 0;
+            box-shadow: none;
+            align-self: end;
+        }
+
         form#mainForm fieldset:only-child .remove-button {
             display: none;
         }
 
         .error {
             color: #e11b1b;
+        }
+
+        summary, summary::marker {
+            cursor: pointer;
+        }
+
+        summary {
+            font-weight: bold;
+        }
+
+        summary ~ div {
+            --padding: 1.1rem;
+            padding: var(--padding) 0 0 var(--padding);
         }
 
         /* Spinner: https://codepen.io/supah/pen/BjYLdW */
@@ -337,8 +399,29 @@
                         <input type="url" name="remoteExplorer" placeholder="https://etherscan.io">
                     </div>
                 </label>
+                <details>
+                    <summary>Advanced settings</summary>
+                    <div>
+                        <label>
+                            <span>
+                                Scraper arguments
+                            </span>
+                            <div class="field">
+                                <input type="text" name="scraperArgs">
+                            </div>
+                        </label>
+                        <label>
+                            <span>
+                                Scraper command file content
+                            </span>
+                            <div class="field">
+                                <textarea name="scraperFile" rows="2" spellcheck="false"></textarea>
+                            </div>
+                        </label>
+                    </div>
+                </details>
 
-                <button type="button" class="remove-button" data-js="removeButton">Remove</button>
+                <button type="button" class="remove-button danger" data-js="removeButton">Remove</button>
             </fieldset>
         </template>
 
@@ -362,6 +445,87 @@
         </div>
 
         <form id="mainForm" action="/configuration" method="post" novalidate>
+            <h1>Global settings</h1>
+
+            <fieldset name="global">
+                <div class="choice required">
+                    <span>
+                        Run scraper
+                    </span>
+                    <div class="field">
+                        <label>
+                            <input type="radio" name="runScraper" value="true" checked>
+                            <strong title="Recommended">Yes</strong>
+                        </label>
+                        <label>
+                            <input type="radio" name="runScraper" value="false">No
+                        </label>
+                    </div>
+                    <p class="explainer">
+                        Scan the chain and update the TrueBlocks index of appearances. This requires an endpoint that supports trace_* methods as your RPC Provider (not geth).
+                    </p>
+                </div>
+                <div class="choice required">
+                    <span>
+                        Download bloom filters:
+                    </span>
+                    <div class="field">
+                        <label>
+                            <input type="radio" name="initBlooms" value="true" checked>
+                            <strong title="Recommended">Yes</strong>
+                        </label>
+                        <label>
+                            <input type="radio" name="initBlooms" value="false">No
+                        </label>
+                    </div>
+                    <p class="explainer">
+                        Download mainnet bloom filters on startup? Otherwise they must be generated locally. This is recommended (~3GB).
+                    </p>
+                </div>
+
+                <details>
+                    <summary>Advanced settings</summary>
+                    <div>
+                        <div class="choice required">
+                            <span>
+                                Download full index:
+                            </span>
+                            <div class="field">
+                                <label>
+                                    <input type="radio" name="initIndex" value="true">Yes
+                                </label>
+                                <label>
+                                    <input type="radio" name="initIndex" value="false" checked>
+                                    <strong title="Recommended">No</strong>
+                                </label>
+                            </div>
+                            <p class="explainer">
+                                Download the entire mainnet index on startup? This is NOT recommended as it takes up considerable space (~80GB).
+                            </p>
+                        </div>
+                        <label>
+                            <span>
+                                <code>chifra monitors --watch</code> arguments
+                            </span>
+                            <div class="field">
+                                <input type="text" name="monitorArgs">
+                            </div>
+                        </label>
+                        <label>
+                            <span>
+                                <code>chifra monitors --watch</code> command file content
+                            </span>
+                            <div class="field">
+                                <textarea name="monitorFile" rows="2" spellcheck="false"></textarea>
+                            </div>
+                        </label>
+                    </div>
+                </details>
+            </fieldset>
+
+            </details>
+
+            <h1>Chains</h1>
             <div data-js="dynamicRows">
 
             </div>
@@ -378,6 +542,14 @@
         const statusSuccess = document.querySelector('.status.success');
         const statusFailure = document.querySelector('.status.failure');
 
+        function fieldsetToKeyValue(fieldset) {
+            return Object.fromEntries(
+                [...fieldset.querySelectorAll('input, textarea')]
+                .filter((input) => input.type !== 'radio' || input.checked === true)
+                .map((input) => [input.name, ['true', 'false'].includes(input.value) ? JSON.parse(input.value) : input.value])
+            );
+        }
+
         form.addEventListener('submit', async (event) => {
             event.preventDefault();
 
@@ -386,19 +558,26 @@
             if (!form.checkValidity()) return;
 
             saveButton.classList.add('loading');
-            const groups = [...form.querySelectorAll('fieldset')];
-            const values = groups.map((element) => {
-                return Object.fromEntries([...element.querySelectorAll('input')].map((input) => [input.name, input.value]));
-            });
+            const chainFieldsets = [...form.querySelectorAll('fieldset:not([name=global])')];
+            const chains = chainFieldsets.map(fieldsetToKeyValue);
+            const globalFieldset = form.querySelector('fieldset[name=global');
+            const global = fieldsetToKeyValue(globalFieldset);
 
             try {
-                await fetch(form.action, {
+                const { ok, statusText } = await fetch(form.action, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify(values),
+                    body: JSON.stringify({
+                        Global: global,
+                        Chains: chains,
+                    }),
                 });
+
+                if (!ok) {
+                    throw new Error(statusText);
+                }
 
                 statusSuccess.hidden = false;
             } catch (error) {
@@ -430,7 +609,10 @@
         }
 
         async function readExistingConfig() {
-            let config = [{}];
+            let config = {
+                Global: {},
+                Chains: [{}],
+            };
 
             try {
                 const response = await fetch('/configuration');
@@ -458,9 +640,24 @@
             });
         }
 
+        function loadGlobalConfig(globalConfig) {
+            form.querySelector('fieldset[name=global] [name=runScraper][value=true]').checked = globalConfig.RunScraper;
+            form.querySelector('fieldset[name=global] [name=runScraper][value=false]').checked = !globalConfig.RunScraper;
+
+            form.querySelector('fieldset[name=global] [name=initBlooms][value=true]').checked = globalConfig.InitBlooms;
+            form.querySelector('fieldset[name=global] [name=initBlooms][value=false]').checked = !globalConfig.InitBlooms;
+
+            form.querySelector('fieldset[name=global] [name=initIndex][value=true]').checked = globalConfig.InitIndex;
+            form.querySelector('fieldset[name=global] [name=initIndex][value=false]').checked = !globalConfig.InitIndex;
+
+            form.querySelector('fieldset[name=global] [name=monitorArgs]').value = globalConfig.MonitorArgs;
+            form.querySelector('fieldset[name=global] [name=monitorFile]').value = globalConfig.MonitorFile;
+        }
+
         (async () => {
             const config = await readExistingConfig();
-            buildRowsForExistingConfig(config);
+            loadGlobalConfig(config.Global);
+            buildRowsForExistingConfig(config.Chains);
             // addRow();
             document.querySelector('.actions button[data-js=add]').addEventListener('click', () => {
                 addRow();

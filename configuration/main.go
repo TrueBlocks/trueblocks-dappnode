@@ -20,9 +20,22 @@ type ConfigurationItem struct {
 	IpfsGateway    string
 	LocalExplorer  string
 	RemoteExplorer string
+	ScraperArgs    string
+	ScraperFile    string
 }
 
-type ConfigurationPost []ConfigurationItem
+type GlobalConfiguration struct {
+	RunScraper  bool
+	InitBlooms  bool
+	InitIndex   bool
+	MonitorArgs string
+	MonitorFile string
+}
+
+type ConfigurationPost struct {
+	Global GlobalConfiguration
+	Chains []ConfigurationItem
+}
 
 func EnvsFromConfiguration(item ConfigurationItem) string {
 	var b strings.Builder
@@ -34,6 +47,8 @@ func EnvsFromConfiguration(item ConfigurationItem) string {
 	b.WriteString(prefix + "PINGATEWAY=" + item.IpfsGateway + "\n")
 	b.WriteString(prefix + "LOCALEXPLORER=" + item.LocalExplorer + "\n")
 	b.WriteString(prefix + "REMOTEEXPLORER=" + item.RemoteExplorer + "\n")
+	b.WriteString(fmt.Sprintf("SCRAPER_%s_ARGS=%s\n", strings.ToUpper(item.Name), item.ScraperArgs))
+	b.WriteString(fmt.Sprintf("SCRAPER_%s_FILE=%s\n", strings.ToUpper(item.Name), normalizeFileContent(item.ScraperFile)))
 
 	return b.String()
 }
@@ -58,17 +73,31 @@ func WriteEnvFile(path string, contents string) (err error) {
 	return nil
 }
 
-func SaveConfiguration(path string, items []ConfigurationItem) (err error) {
-	lines := []string{}
-	for _, item := range items {
+func normalizeFileContent(content string) string {
+	return fmt.Sprintf(
+		`"%s"`,
+		strings.ReplaceAll(content, "\n", " \\ \n"),
+	)
+}
+
+func SaveConfiguration(path string, config ConfigurationPost) (err error) {
+	lines := []string{
+		fmt.Sprint("RUN_SCRAPER=", config.Global.RunScraper),
+		fmt.Sprint("BOOTSTRAP_BLOOM_FILTERS=", config.Global.InitBlooms),
+		fmt.Sprint("BOOTSTRAP_FULL_INDEX=", config.Global.InitIndex),
+		fmt.Sprint("MONITORS_WATCH_ARGS=", config.Global.MonitorArgs),
+		fmt.Sprint("MONITORS_WATCH_FILE=", normalizeFileContent(config.Global.MonitorFile)),
+	}
+
+	for _, item := range config.Chains {
 		lines = append(lines, EnvsFromConfiguration(item))
 	}
 	err = WriteEnvFile(path, strings.Join(lines, "\n"))
 	return err
 }
 
-func SaveJson(path string, items []ConfigurationItem) (err error) {
-	contents, err := json.MarshalIndent(items, "", "	")
+func SaveJson(path string, config ConfigurationPost) (err error) {
+	contents, err := json.MarshalIndent(config, "", "	")
 	if err != nil {
 		return
 	}
@@ -101,7 +130,7 @@ func makeConfigurationHandler(outputDir string) http.HandlerFunc {
 		if r.Method == http.MethodPost {
 			log.Println("POST /configuration")
 
-			p := make([]ConfigurationItem, 0)
+			p := ConfigurationPost{}
 
 			err := json.NewDecoder(r.Body).Decode(&p)
 			if err != nil {
@@ -138,8 +167,10 @@ func makeConfigurationHandler(outputDir string) http.HandlerFunc {
 
 func main() {
 	var outputPath string
+	var port string
 
 	flag.StringVar(&outputPath, "dir", "/output/", "Path to output directory")
+	flag.StringVar(&port, "port", "80", "Port to listen on")
 	flag.Parse()
 	log.Println("Will save output to", outputPath)
 
@@ -148,8 +179,8 @@ func main() {
 	fs := http.FileServer(http.Dir("./static"))
 	http.Handle("/", fs)
 
-	log.Print("Listening on :80...")
-	err := http.ListenAndServe(":80", nil)
+	log.Print("Listening on ", port)
+	err := http.ListenAndServe(fmt.Sprintf(":%s", port), nil)
 	if err != nil {
 		log.Fatal(err)
 	}
