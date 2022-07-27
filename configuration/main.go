@@ -41,15 +41,15 @@ type ConfigurationPost struct {
 func EnvsFromConfiguration(item ConfigurationItem) string {
 	var b strings.Builder
 
-	prefix := fmt.Sprintf("TB_CHAINS_%s_", strings.ToUpper(item.Name))
+	prefix := fmt.Sprintf("export TB_CHAINS_%s_", strings.ToUpper(item.Name))
 	b.WriteString(prefix + "CHAINID=" + item.ChainId + "\n")
 	b.WriteString(prefix + "RPCPROVIDER=" + item.Rpc + "\n")
 	b.WriteString(prefix + "SYMBOL=" + item.Symbol + "\n")
 	b.WriteString(prefix + "PINGATEWAY=" + item.IpfsGateway + "\n")
 	b.WriteString(prefix + "LOCALEXPLORER=" + item.LocalExplorer + "\n")
 	b.WriteString(prefix + "REMOTEEXPLORER=" + item.RemoteExplorer + "\n")
-	b.WriteString(fmt.Sprintf("SCRAPER_%s_ARGS=%s\n", strings.ToUpper(item.Name), normalizeUserInput(item.ScraperArgs)))
-	b.WriteString(fmt.Sprintf("SCRAPER_%s_FILE=%s\n", strings.ToUpper(item.Name), normalizeUserInput(item.ScraperFile)))
+	b.WriteString(fmt.Sprintf("export SCRAPER_%s_ARGS=%s\n", strings.ToUpper(item.Name), normalizeUserInput(item.ScraperArgs)))
+	b.WriteString(fmt.Sprintf("export SCRAPER_%s_FILE=%s\n", strings.ToUpper(item.Name), normalizeUserInput(item.ScraperFile)))
 
 	return b.String()
 }
@@ -80,11 +80,12 @@ func normalizeUserInput(content string) string {
 
 func SaveConfiguration(path string, config ConfigurationPost) (err error) {
 	lines := []string{
-		fmt.Sprint("RUN_SCRAPER=", config.Global.RunScraper),
-		fmt.Sprint("BOOTSTRAP_BLOOM_FILTERS=", config.Global.InitBlooms),
-		fmt.Sprint("BOOTSTRAP_FULL_INDEX=", config.Global.InitIndex),
-		fmt.Sprint("MONITORS_WATCH_ARGS=", normalizeUserInput(config.Global.MonitorArgs)),
-		fmt.Sprint("MONITORS_WATCH_FILE=", normalizeUserInput(config.Global.MonitorFile)),
+		"#!/bin/bash",
+		fmt.Sprint("export RUN_SCRAPER=", config.Global.RunScraper),
+		fmt.Sprint("export BOOTSTRAP_BLOOM_FILTERS=", config.Global.InitBlooms),
+		fmt.Sprint("export BOOTSTRAP_FULL_INDEX=", config.Global.InitIndex),
+		fmt.Sprint("export MONITORS_WATCH_ARGS=", normalizeUserInput(config.Global.MonitorArgs)),
+		fmt.Sprint("export MONITORS_WATCH_FILE=", normalizeUserInput(config.Global.MonitorFile)),
 	}
 
 	for _, item := range config.Chains {
@@ -137,7 +138,7 @@ func makeConfigurationHandler(outputDir string) http.HandlerFunc {
 				return
 			}
 
-			err = SaveConfiguration(path.Join(outputDir, "configuration.env"), p)
+			err = SaveConfiguration(path.Join(outputDir, "configuration.sh"), p)
 			if err != nil {
 				http.Error(w, fmt.Sprintf("Could not save configuration file: %s", err), http.StatusInternalServerError)
 				return
