@@ -29,4 +29,4 @@ COPY --from=builder /root/trueblocks-dappnode/configuration/static /app/static
 EXPOSE 80
 
 # Run entrypoint
-ENTRYPOINT /app/server
+ENTRYPOINT /app/server --static /app/static

@@ -168,15 +168,17 @@ func makeConfigurationHandler(outputDir string) http.HandlerFunc {
 func main() {
 	var outputPath string
 	var port string
+	var staticDir string
 
 	flag.StringVar(&outputPath, "dir", "/output/", "Path to output directory")
 	flag.StringVar(&port, "port", "80", "Port to listen on")
+	flag.StringVar(&staticDir, "static", "./static", "Directory to serve static files from")
 	flag.Parse()
 	log.Println("Will save output to", outputPath)
 
 	http.HandleFunc("/configuration", makeConfigurationHandler(outputPath))
 
-	fs := http.FileServer(http.Dir("./static"))
+	fs := http.FileServer(http.Dir(staticDir))
 	http.Handle("/", fs)
 
 	log.Print("Listening on ", port)
