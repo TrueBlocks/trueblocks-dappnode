@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"os"
 	"path"
+	"strconv"
 	"strings"
 )
 
@@ -47,8 +48,8 @@ func EnvsFromConfiguration(item ConfigurationItem) string {
 	b.WriteString(prefix + "PINGATEWAY=" + item.IpfsGateway + "\n")
 	b.WriteString(prefix + "LOCALEXPLORER=" + item.LocalExplorer + "\n")
 	b.WriteString(prefix + "REMOTEEXPLORER=" + item.RemoteExplorer + "\n")
-	b.WriteString(fmt.Sprintf("SCRAPER_%s_ARGS=%s\n", strings.ToUpper(item.Name), item.ScraperArgs))
-	b.WriteString(fmt.Sprintf("SCRAPER_%s_FILE=%s\n", strings.ToUpper(item.Name), normalizeFileContent(item.ScraperFile)))
+	b.WriteString(fmt.Sprintf("SCRAPER_%s_ARGS=%s\n", strings.ToUpper(item.Name), normalizeUserInput(item.ScraperArgs)))
+	b.WriteString(fmt.Sprintf("SCRAPER_%s_FILE=%s\n", strings.ToUpper(item.Name), normalizeUserInput(item.ScraperFile)))
 
 	return b.String()
 }
@@ -73,11 +74,8 @@ func WriteEnvFile(path string, contents string) (err error) {
 	return nil
 }
 
-func normalizeFileContent(content string) string {
-	return fmt.Sprintf(
-		`"%s"`,
-		strings.ReplaceAll(content, "\n", " \\ \n"),
-	)
+func normalizeUserInput(content string) string {
+	return strconv.Quote(content)
 }
 
 func SaveConfiguration(path string, config ConfigurationPost) (err error) {
@@ -85,8 +83,8 @@ func SaveConfiguration(path string, config ConfigurationPost) (err error) {
 		fmt.Sprint("RUN_SCRAPER=", config.Global.RunScraper),
 		fmt.Sprint("BOOTSTRAP_BLOOM_FILTERS=", config.Global.InitBlooms),
 		fmt.Sprint("BOOTSTRAP_FULL_INDEX=", config.Global.InitIndex),
-		fmt.Sprint("MONITORS_WATCH_ARGS=", config.Global.MonitorArgs),
-		fmt.Sprint("MONITORS_WATCH_FILE=", normalizeFileContent(config.Global.MonitorFile)),
+		fmt.Sprint("MONITORS_WATCH_ARGS=", normalizeUserInput(config.Global.MonitorArgs)),
+		fmt.Sprint("MONITORS_WATCH_FILE=", normalizeUserInput(config.Global.MonitorFile)),
 	}
 
 	for _, item := range config.Chains {

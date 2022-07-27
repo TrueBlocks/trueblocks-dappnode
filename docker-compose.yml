@@ -1,6 +1,7 @@
 version: "3.4"
 services:
   core:
+    # TODO: change image
     image: trueblocks_core_conf
     environment:
       REQUIRE_CONFIGURATION_TOOL: true
@@ -40,11 +41,13 @@ services:
       - "addresses:/addresses"
       - "configuration:/configuration"
   config:
-    image: "config.trueblocks.public.dappnode.eth:0.37.0"
+    image: trueblocks/configurator
     build:
       context: ./configuration/docker
       args:
         UPSTREAM_VER: feature/configuration_tool
+    ports:
+      - "9080:80"
     restart: unless-stopped
     volumes:
       - "configuration:/output"

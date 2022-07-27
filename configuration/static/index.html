@@ -563,6 +563,9 @@
             const globalFieldset = form.querySelector('fieldset[name=global');
             const global = fieldsetToKeyValue(globalFieldset);
 
+            statusSuccess.hidden = true;
+            statusFailure.hidden = true;
+
             try {
                 const { ok, statusText } = await fetch(form.action, {
                     method: 'POST',
@@ -587,6 +590,14 @@
 
             form.classList.remove('validated');
             saveButton.classList.remove('loading');
+
+            // Make status notifications visible
+            if (window.scrollY < 200) return;
+
+            window.scrollTo({
+                top: 0,
+                behavior: "smooth"
+            });
         });
 
         function addRow(fill=() => {}) {
@@ -636,6 +647,8 @@
                     row.querySelector('[name=ipfsGateway]').value = item.IpfsGateway || '';
                     row.querySelector('[name=localExplorer]').value = item.LocalExplorer || '';
                     row.querySelector('[name=remoteExplorer]').value = item.RemoteExplorer || '';
+                    row.querySelector('[name=scraperArgs]').value = item.ScraperArgs || '';
+                    row.querySelector('[name=scraperFile]').value = item.ScraperFile || '';
                 });
             });
         }
@@ -650,8 +663,8 @@
             form.querySelector('fieldset[name=global] [name=initIndex][value=true]').checked = globalConfig.InitIndex;
             form.querySelector('fieldset[name=global] [name=initIndex][value=false]').checked = !globalConfig.InitIndex;
 
-            form.querySelector('fieldset[name=global] [name=monitorArgs]').value = globalConfig.MonitorArgs;
-            form.querySelector('fieldset[name=global] [name=monitorFile]').value = globalConfig.MonitorFile;
+            form.querySelector('fieldset[name=global] [name=monitorArgs]').value = globalConfig.MonitorArgs || '';
+            form.querySelector('fieldset[name=global] [name=monitorFile]').value = globalConfig.MonitorFile || '';
         }
 
         (async () => {
