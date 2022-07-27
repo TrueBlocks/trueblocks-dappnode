@@ -26,11 +26,12 @@ type ConfigurationItem struct {
 }
 
 type GlobalConfiguration struct {
-	RunScraper  bool
-	InitBlooms  bool
-	InitIndex   bool
-	MonitorArgs string
-	MonitorFile string
+	RunScraper   bool
+	InitBlooms   bool
+	InitIndex    bool
+	MonitorArgs  string
+	MonitorFile  string
+	EtherscanKey string
 }
 
 type ConfigurationPost struct {
@@ -86,6 +87,7 @@ func SaveConfiguration(path string, config ConfigurationPost) (err error) {
 		fmt.Sprint("export BOOTSTRAP_FULL_INDEX=", config.Global.InitIndex),
 		fmt.Sprint("export MONITORS_WATCH_ARGS=", normalizeUserInput(config.Global.MonitorArgs)),
 		fmt.Sprint("export MONITORS_WATCH_FILE=", normalizeUserInput(config.Global.MonitorFile)),
+		fmt.Sprint("export TB_SETTINGS_ETHERSCANKEY=", normalizeUserInput(config.Global.EtherscanKey)),
 	}
 
 	for _, item := range config.Chains {

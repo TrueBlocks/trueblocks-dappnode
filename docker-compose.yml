@@ -40,7 +40,7 @@ services:
       - "exports:/exports"
       - "addresses:/addresses"
       - "configuration:/configuration"
-  config:
+  configure:
     image: trueblocks/configurator
     build:
       context: ./configuration/docker

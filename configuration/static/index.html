@@ -151,6 +151,9 @@
 
         .choice .explainer {
             grid-area: explainer;
+        }
+
+        .explainer {
             font-style: italic;
             font-size: small;
             margin: 0;
@@ -482,6 +485,17 @@
                         Download mainnet bloom filters on startup? Otherwise they must be generated locally. This is recommended (~3GB).
                     </p>
                 </div>
+                <label>
+                    <span>
+                       Etherscan key
+                    </span>
+                    <div class="field">
+                        <input type="text" name="etherscanKey">
+                    </div>
+                    <p class="explainer">
+                        Etherscan API key is used to download ABI data
+                    </p>
+                </label>
 
                 <details>
                     <summary>Advanced settings</summary>
@@ -609,7 +623,7 @@
 
                 confirmRemovalDialog.addEventListener('close', () => {
                     const answer = confirmRemovalDialog.returnValue;
-                    console.log(answer);
+
                     if (answer === 'cancel') return;
 
                     button.parentElement.remove();
@@ -621,7 +635,10 @@
 
         async function readExistingConfig() {
             let config = {
-                Global: {},
+                Global: {
+                    RunScraper: true,
+                    InitBlooms: true,
+                },
                 Chains: [{}],
             };
 
@@ -633,7 +650,6 @@
                 console.error(error);
             }
 
-            console.log(config);
             return config;
         }
 
@@ -659,6 +675,8 @@
 
             form.querySelector('fieldset[name=global] [name=initBlooms][value=true]').checked = globalConfig.InitBlooms;
             form.querySelector('fieldset[name=global] [name=initBlooms][value=false]').checked = !globalConfig.InitBlooms;
+
+            form.querySelector('fieldset[name=global] [name=etherscanKey]').value = globalConfig.EtherscanKey || '';
 
             form.querySelector('fieldset[name=global] [name=initIndex][value=true]').checked = globalConfig.InitIndex;
             form.querySelector('fieldset[name=global] [name=initIndex][value=false]').checked = !globalConfig.InitIndex;
