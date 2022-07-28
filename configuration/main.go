@@ -56,9 +56,12 @@ func EnvsFromConfiguration(item ConfigurationItem) string {
 	if item.RemoteExplorer != "" {
 		b.WriteString(prefix + "REMOTEEXPLORER=" + item.RemoteExplorer + "\n")
 	}
-
-	b.WriteString(fmt.Sprintf("export SCRAPER_%s_ARGS=%s\n", strings.ToUpper(item.Name), normalizeUserInput(item.ScraperArgs)))
-	b.WriteString(fmt.Sprintf("export SCRAPER_%s_FILE=%s\n", strings.ToUpper(item.Name), normalizeUserInput(item.ScraperFile)))
+	if item.ScraperArgs != "" {
+		b.WriteString(fmt.Sprintf("export SCRAPER_%s_ARGS=%s\n", strings.ToUpper(item.Name), normalizeUserInput(item.ScraperArgs)))
+	}
+	if item.ScraperFile != "" {
+		b.WriteString(fmt.Sprintf("export SCRAPER_%s_FILE=%s\n", strings.ToUpper(item.Name), normalizeUserInput(item.ScraperFile)))
+	}
 
 	return b.String()
 }
@@ -93,9 +96,13 @@ func SaveConfiguration(path string, config ConfigurationPost) (err error) {
 		fmt.Sprint("export RUN_SCRAPER=", config.Global.RunScraper),
 		fmt.Sprint("export BOOTSTRAP_BLOOM_FILTERS=", config.Global.InitBlooms),
 		fmt.Sprint("export BOOTSTRAP_FULL_INDEX=", config.Global.InitIndex),
-		fmt.Sprint("export MONITORS_WATCH_ARGS=", normalizeUserInput(config.Global.MonitorArgs)),
-		fmt.Sprint("export MONITORS_WATCH_FILE=", normalizeUserInput(config.Global.MonitorFile)),
 		fmt.Sprint("export TB_SETTINGS_ETHERSCANKEY=", normalizeUserInput(config.Global.EtherscanKey)),
+	}
+	if config.Global.MonitorArgs != "" {
+		lines = append(lines, fmt.Sprint("export MONITORS_WATCH_ARGS=", normalizeUserInput(config.Global.MonitorArgs)))
+	}
+	if config.Global.MonitorFile != "" {
+		lines = append(lines, fmt.Sprint("export MONITORS_WATCH_FILE=", normalizeUserInput(config.Global.MonitorFile)))
 	}
 
 	for _, item := range config.Chains {
