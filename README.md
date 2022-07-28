@@ -18,13 +18,12 @@ The scraper will fill in the missing gaps from the bloom filters and continually
 
 The Bloom Filters are what allow quick searching of the appearance data, it's downloaded from IPFS and consumes around 3GB of storage.
 
-The full index can be download, but it will consume somewhere around 80GB of storage. However, it will make initial queries to new addresses much faster.
+The full index can be downloaded, but it will consume somewhere around 80GB of storage. However, it will make initial queries to new addresses much faster.
 
 ## Configuration
 
-This package was designed to be user friendly and simple, as such it only supports Ethereum Mainnet out of the box and there are config options only for Ethereum Mainnet exposed under the configs section of the DAppNode package UI.
-
-However, you can download, modify, and re-upload the `/root/.local/share/trueblocks/trueBlocks.toml` file and add your own chain configs from inside the DAppNode UI.
+After installing this package, go to [configure.trueblocks.public.dappnode] to add or remove chains and change settings.
+When you configure it for a first time, you do not need to restart the package.
 
 ## Exposing Publicly
 

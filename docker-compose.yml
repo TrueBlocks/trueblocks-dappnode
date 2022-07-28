@@ -1,8 +1,9 @@
 version: "3.4"
 services:
   core:
-    image: "trueblocks/core:0.37.0-beta"
+    image: "trueblocks/core:develop"
     environment:
+      REQUIRE_CONFIGURATION_TOOL: "true"
       TB_DEFAULTCHAIN: mainnet
       TB_CHAINS_MAINNET_CHAINID: 1
       TB_CHAINS_MAINNET_RPCPROVIDER: null
@@ -18,12 +19,14 @@ services:
     volumes:
       - "Index:/index"
       - "Cache:/cache"
+      - "configuration:/configuration"
   monitors-watch:
     depends_on:
       - core
     restart: unless-stopped
-    image: "trueblocks/monitors-watch:0.37.0-beta"
+    image: "trueblocks/monitors-watch:develop"
     environment:
+      REQUIRE_CONFIGURATION_TOOL: "true"
       TB_DEFAULTCHAIN: mainnet
       TB_CHAINS_MAINNET_CHAINID: 1
       TB_CHAINS_MAINNET_RPCPROVIDER: null
@@ -36,8 +39,19 @@ services:
       - "Cache:/cache"
       - "exports:/exports"
       - "addresses:/addresses"
+      - "configuration:/configuration"
+  configure:
+    image: "configure.trueblocks.public.dappnode.eth:0.37.0"
+    build:
+      context: ./configuration/docker
+      args:
+        UPSTREAM_VER: feature/configuration_tool
+    restart: unless-stopped
+    volumes:
+      - "configuration:/output"
 volumes:
   Index: {}
   Cache: {}
   exports: {}
   addresses: {}
+  configuration: {}
