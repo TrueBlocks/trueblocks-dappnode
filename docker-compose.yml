@@ -1,8 +1,7 @@
 version: "3.4"
 services:
   core:
-    # TODO: change image
-    image: trueblocks_core_conf
+    image: "trueblocks/core:develop"
     environment:
       REQUIRE_CONFIGURATION_TOOL: true
       TB_DEFAULTCHAIN: mainnet
@@ -25,8 +24,9 @@ services:
     depends_on:
       - core
     restart: unless-stopped
-    image: "trueblocks/monitors-watch:0.37.0-beta"
+    image: "trueblocks/monitors-watch:develop"
     environment:
+      REQUIRE_CONFIGURATION_TOOL: true
       TB_DEFAULTCHAIN: mainnet
       TB_CHAINS_MAINNET_CHAINID: 1
       TB_CHAINS_MAINNET_RPCPROVIDER: null
@@ -41,13 +41,11 @@ services:
       - "addresses:/addresses"
       - "configuration:/configuration"
   configure:
-    image: trueblocks/configurator
+    image: "trueblocks/configurator:develop"
     build:
       context: ./configuration/docker
       args:
         UPSTREAM_VER: feature/configuration_tool
-    ports:
-      - "9080:80"
     restart: unless-stopped
     volumes:
       - "configuration:/output"

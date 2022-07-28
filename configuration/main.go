@@ -46,9 +46,17 @@ func EnvsFromConfiguration(item ConfigurationItem) string {
 	b.WriteString(prefix + "CHAINID=" + item.ChainId + "\n")
 	b.WriteString(prefix + "RPCPROVIDER=" + item.Rpc + "\n")
 	b.WriteString(prefix + "SYMBOL=" + item.Symbol + "\n")
-	b.WriteString(prefix + "PINGATEWAY=" + item.IpfsGateway + "\n")
-	b.WriteString(prefix + "LOCALEXPLORER=" + item.LocalExplorer + "\n")
-	b.WriteString(prefix + "REMOTEEXPLORER=" + item.RemoteExplorer + "\n")
+
+	if item.IpfsGateway != "" {
+		b.WriteString(prefix + "PINGATEWAY=" + item.IpfsGateway + "\n")
+	}
+	if item.LocalExplorer != "" {
+		b.WriteString(prefix + "LOCALEXPLORER=" + item.LocalExplorer + "\n")
+	}
+	if item.RemoteExplorer != "" {
+		b.WriteString(prefix + "REMOTEEXPLORER=" + item.RemoteExplorer + "\n")
+	}
+
 	b.WriteString(fmt.Sprintf("export SCRAPER_%s_ARGS=%s\n", strings.ToUpper(item.Name), normalizeUserInput(item.ScraperArgs)))
 	b.WriteString(fmt.Sprintf("export SCRAPER_%s_FILE=%s\n", strings.ToUpper(item.Name), normalizeUserInput(item.ScraperFile)))
 
