@@ -3,7 +3,7 @@ services:
   core:
     image: "trueblocks/core:develop"
     environment:
-      REQUIRE_CONFIGURATION_TOOL: true
+      REQUIRE_CONFIGURATION_TOOL: "true"
       TB_DEFAULTCHAIN: mainnet
       TB_CHAINS_MAINNET_CHAINID: 1
       TB_CHAINS_MAINNET_RPCPROVIDER: null
@@ -26,7 +26,7 @@ services:
     restart: unless-stopped
     image: "trueblocks/monitors-watch:develop"
     environment:
-      REQUIRE_CONFIGURATION_TOOL: true
+      REQUIRE_CONFIGURATION_TOOL: "true"
       TB_DEFAULTCHAIN: mainnet
       TB_CHAINS_MAINNET_CHAINID: 1
       TB_CHAINS_MAINNET_RPCPROVIDER: null
@@ -41,7 +41,7 @@ services:
       - "addresses:/addresses"
       - "configuration:/configuration"
   configure:
-    image: "trueblocks/configurator:develop"
+    image: "configure.trueblocks.public.dappnode.eth:0.37.0"
     build:
       context: ./configuration/docker
       args:
