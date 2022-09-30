@@ -2,3 +2,5 @@
 build_*
 .idea/
 .vscode/
+.env
+server
