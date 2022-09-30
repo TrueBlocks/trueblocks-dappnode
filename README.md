@@ -37,7 +37,7 @@ This API has destructive options. You should block the following:
 
 ## Contributing
 
-We love contributors. Please see information about our [work flow](https://github.com/TrueBlocks/trueblocks-core/blob/master/docs/BRANCHING.md) before proceeding.
+We love contributors. Please see information about our [work flow](https://github.com/TrueBlocks/trueblocks-core/blob/develop/docs/BRANCHING.md) before proceeding.
 
 1. Fork this repository into your own repo.
 2. Create a branch: `git checkout -b <branch_name>`.
