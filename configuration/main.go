@@ -99,10 +99,10 @@ func SaveConfiguration(path string, config ConfigurationPost) (err error) {
 		fmt.Sprint("export TB_SETTINGS_ETHERSCANKEY=", normalizeUserInput(config.Global.EtherscanKey)),
 	}
 	if config.Global.MonitorArgs != "" {
-		lines = append(lines, fmt.Sprint("export MONITORS_WATCH_ARGS=", normalizeUserInput(config.Global.MonitorArgs)))
+		lines = append(lines, fmt.Sprint("export MONITORS_ARGS=", normalizeUserInput(config.Global.MonitorArgs)))
 	}
 	if config.Global.MonitorFile != "" {
-		lines = append(lines, fmt.Sprint("export MONITORS_WATCH_FILE=", normalizeUserInput(config.Global.MonitorFile)))
+		lines = append(lines, fmt.Sprint("export MONITORS_FILE=", normalizeUserInput(config.Global.MonitorFile)))
 	}
 
 	for _, item := range config.Chains {

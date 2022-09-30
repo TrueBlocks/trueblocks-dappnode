@@ -20,11 +20,11 @@ services:
       - "Index:/index"
       - "Cache:/cache"
       - "configuration:/configuration"
-  monitors-watch:
+  monitors:
     depends_on:
       - core
     restart: unless-stopped
-    image: "trueblocks/monitors-watch:develop"
+    image: "trueblocks/monitors:develop"
     environment:
       REQUIRE_CONFIGURATION_TOOL: "true"
       TB_DEFAULTCHAIN: mainnet
@@ -33,7 +33,7 @@ services:
       TB_CHAINS_MAINNET_SYMBOL: ETH
       TB_CHAINS_MAINNET_PINGATEWAY: "https://ipfs.unchainedindex.io/ipfs/"
       TB_ETHERSCAN_KEY: null
-      MONITORS_WATCH_FILE: export --appearances
+      MONITORS_FILE: export --appearances
     volumes:
       - "Index:/index"
       - "Cache:/cache"
