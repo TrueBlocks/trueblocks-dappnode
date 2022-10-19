@@ -1,8 +1,25 @@
 # TrueBlocks DAppNode Package
 
-This DAppNode package contains both [TrueBlocks-Core](https://github.com/TrueBlocks/trueblocks-core) AND [TrueBlocks-Exporer](https://github.com/TrueBlocks/trueblocks-explorer)
+## Building
 
-These two packages work together to provide decentralized indexing and address monitoring/exploring. See their official repos for more information. There are two primary requirements:
+As long as https://github.com/dappnode/DAppNodeSDK/pull/258 is not merged, we have to use forked DAppNodeSDK to build the package:
+
+```bash
+git clone https://github.com/dszlachta/DAppNodeSDK.git
+cd DAppNodeSDK
+git checkout dszlachta/fix_wizard_target_service_schema
+yarn
+yarn build
+
+# Go back to this directory
+cd ../trueblocks-dappnode
+../DAppNodeSDK/dist/dappnodesdk.js build
+```
+
+## Description
+
+This DAppNode package contains both [TrueBlocks-Core](https://github.com/TrueBlocks/trueblocks-core), a tool providing decentralized indexing and address monitoring/exploring.
+See official repo for more information. There are two primary requirements:
 
 1. An [Etherscan](https://etherscan.io/) API Key
     * This key is used to download contract ABI data
@@ -22,8 +39,11 @@ The full index can be downloaded, but it will consume somewhere around 80GB of s
 
 ## Configuration
 
-After installing this package, go to [configure.trueblocks.public.dappnode] to add or remove chains and change settings.
-When you configure it for a first time, you do not need to restart the package.
+This package was designed to be user friendly and simple, as such it only supports Ethereum Mainnet out of the box and there are config options only
+for Ethereum Mainnet exposed under the configs section of the DAppNode package UI.
+
+After installing this package, go to [configure.trueblocks.public.dappnode] to add or remove chains and change settings. When you configure it for a
+first time, you do not need to restart the package.
 
 ## Exposing Publicly
 
