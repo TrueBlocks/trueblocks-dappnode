@@ -1,0 +1,57 @@
+version: "3.4"
+services:
+  core:
+    image: "trueblocks/core:develop"
+    environment:
+      REQUIRE_CONFIGURATION_TOOL: "true"
+      TB_DEFAULTCHAIN: mainnet
+      TB_CHAINS_MAINNET_CHAINID: 1
+      TB_CHAINS_MAINNET_RPCPROVIDER: null
+      TB_CHAINS_MAINNET_SYMBOL: ETH
+      TB_CHAINS_MAINNET_PINGATEWAY: "https://ipfs.unchainedindex.io/ipfs/"
+      TB_CHAINS_MAINNET_LOCALEXPLORER: "http://localhost:1234"
+      TB_CHAINS_MAINNET_REMOTEEXPLORER: "https://etherscan.io"
+      TB_ETHERSCAN_KEY: null
+      RUN_SCRAPER: null
+      BOOTSTRAP_BLOOM_FILTERS: null
+      BOOTSTRAP_FULL_INDEX: null
+    restart: unless-stopped
+    volumes:
+      - "Index:/index"
+      - "Cache:/cache"
+      - "configuration:/configuration"
+  monitors:
+    depends_on:
+      - core
+    restart: unless-stopped
+    image: "trueblocks/monitors:develop"
+    environment:
+      REQUIRE_CONFIGURATION_TOOL: "true"
+      TB_DEFAULTCHAIN: mainnet
+      TB_CHAINS_MAINNET_CHAINID: 1
+      TB_CHAINS_MAINNET_RPCPROVIDER: null
+      TB_CHAINS_MAINNET_SYMBOL: ETH
+      TB_CHAINS_MAINNET_PINGATEWAY: "https://ipfs.unchainedindex.io/ipfs/"
+      TB_ETHERSCAN_KEY: null
+      MONITORS_FILE: export --appearances
+    volumes:
+      - "Index:/index"
+      - "Cache:/cache"
+      - "exports:/exports"
+      - "addresses:/addresses"
+      - "configuration:/configuration"
+  configure:
+    image: "configure.trueblocks.public.dappnode.eth:0.37.0"
+    build:
+      context: ./configuration/docker
+      args:
+        UPSTREAM_VER: feature/configuration_tool
+    restart: unless-stopped
+    volumes:
+      - "configuration:/output"
+volumes:
+  Index: {}
+  Cache: {}
+  exports: {}
+  addresses: {}
+  configuration: {}

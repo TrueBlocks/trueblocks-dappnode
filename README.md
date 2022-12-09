@@ -1,24 +1,28 @@
 # TrueBlocks DAppNode Package
 
-This DAppNode package contains both [TrueBlocks-Core](https://github.com/TrueBlocks/trueblocks-core) AND [TrueBlocks-Exporer](https://github.com/TrueBlocks/trueblocks-explorer)
+This dAppNode package contains both [TrueBlocks-Core](https://github.com/TrueBlocks/trueblocks-core) and [TrueBlocks-Exporer](https://github.com/TrueBlocks/trueblocks-explorer).
 
-These two packages work together to provide decentralized indexing and address monitoring/exploring. See their official repos for more information. There are two primary requirements:
+These two packages work together to provide decentralized indexing and address exploring. See the underlying repos for more information.
 
-1. An [Etherscan](https://etherscan.io/) API Key
-    * This key is used to download contract ABI data
-2. An Ethereum endpoint capable of `trace_` calls (Erigon, OpenEthereum, Nethermind?)
+In order for this package to work, you must provide two things:
 
-For everything else it is generally recommended to just run with these defaults:
+1. An Ethereum RPC endpoint enabling the `trace_` namespace. (We suggest Erigon or Nethermind. Geth does not work.)
+2. An [Etherscan](https://etherscan.io/) API key. (This is optional, but enables certain features in the Explorer).
 
-* Enable scraper
-* Bootstrap bloom filters
-* Do not download entire index
+While you may configure the following, by default this package:
 
-The scraper will fill in the missing gaps from the bloom filters and continually update the chain data from your endpoint.
+* Downloads the Unchained Index bloom filters from IPFS (about 3GB), and
+* Starts the TrueBlocks indexing scraper.
 
-The Bloom Filters are what allow quick searching of the appearance data, it's downloaded from IPFS and consumes around 3GB of storage.
+The scraper "picks up" from where the bloom filters leave off, meaning your implementation will be producing its own index from that point forward. This will keep your index "fresh."
 
-The full index can be downloaded, but it will consume somewhere around 80GB of storage. However, it will make initial queries to new addresses much faster.
+As you query against the history of the chain for particular addresses, the system will download only those portions of the Unchained Index needed for that particular address. This keeps the size of the index on your machine to a minimum. In effect, you get that portion of the index that you are interested in and no more.
+
+The Bloom filters allow quick searching of the chain's history. The index portions themselves, once downloaded, provide exact locations for an addresses' appearances.
+
+It is possible to download the entire index, and in this case, the overall system behaves more quickly, although this mode takes up nearly 110 GB on your machine.
+
+, but it will consume somewhere around 80GB of storage. However, it will make initial queries to new addresses much faster.
 
 ## Configuration
 
@@ -30,10 +34,11 @@ When you configure it for a first time, you do not need to restart the package.
 It is highly recommended that you don't expose TrueBlocks publicly. It is intended for decentralized single user use. But, you do you.
 
 This API has destructive options. You should block the following:
+
 * HTTP DELETE method
-  * Any HTTP DELETE call is destructive
+* Any HTTP DELETE call is destructive
 * /scrape
-  * This API can turn your scraper on and off, ideally you don't want someone to be able to do this.
+* This API can turn your scraper on and off, ideally you don't want someone to be able to do this.
 
 ## Contributing
 
@@ -45,14 +50,14 @@ We love contributors. Please see information about our [work flow](https://githu
 4. Push back to the original branch: `git push origin TrueBlocks/trueblocks-core`
 5. Create the pull request.
 
+## Contact
+
+If you have questions, comments, or complaints, please join the discussion on our discord server which is [linked from our website](https://trueblocks.io).
+
 ## List of Contributors
 
 Thanks to the following people who have contributed to this project:
 
-* [@tjayrush](https://github.com/tjayrush)
-* [@dszlachta](https://github.com/dszlachta)
-* [@wildmolasses](https://github.com/wildmolasses)
-
-## Contact
-
-If you have questions, comments, or complaints, please join the discussion on our discord server which is [linked from our website](https://trueblocks.io).
+- [@tjayrush](https://github.com/tjayrush)
+- [@dszlachta](https://github.com/dszlachta)
+- [@wildmolasses](https://github.com/wildmolasses)
