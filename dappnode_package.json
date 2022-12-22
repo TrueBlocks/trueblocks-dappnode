@@ -1,6 +1,6 @@
 {
   "name": "trueblocks.public.dappnode.eth",
-  "version": "0.45.0",
+  "version": "0.50.0",
   "shortDescription": "Lightweight indexing for any EVM-based blockchain",
   "description": "TrueBlocks is a collection of libraries, tools, and applications that improve access to the Ethereum data while remaining fully local. To configure, go to configure.trueblocks.public.dappnode",
   "type": "service",
