@@ -1,57 +1,29 @@
 version: "3.4"
 services:
   core:
-    image: "trueblocks/core:develop"
-    environment:
-      REQUIRE_CONFIGURATION_TOOL: "true"
-      TB_DEFAULTCHAIN: mainnet
-      TB_CHAINS_MAINNET_CHAINID: 1
-      TB_CHAINS_MAINNET_RPCPROVIDER: null
-      TB_CHAINS_MAINNET_SYMBOL: ETH
-      TB_CHAINS_MAINNET_PINGATEWAY: "https://ipfs.unchainedindex.io/ipfs/"
-      TB_CHAINS_MAINNET_LOCALEXPLORER: "http://localhost:1234"
-      TB_CHAINS_MAINNET_REMOTEEXPLORER: "https://etherscan.io"
-      TB_ETHERSCAN_KEY: null
-      RUN_SCRAPER: null
-      BOOTSTRAP_BLOOM_FILTERS: null
-      BOOTSTRAP_FULL_INDEX: null
+    image: "trueblocks/core:v0.50.0-beta"
+    entrypoint: |
+      bash -c "\
+      while [ ! -f /configuration/configuration.sh ] \
+      do \
+          echo No configuration found. Please use TrueBlocks Configuration Tool first. \
+          echo If you are using DAppNode, click Info tab above, then Settings link. \
+          echo Will try to re-read the configuration in a few seconds \
+          sleep 5 \
+      done \
+      . /configuration/configuration.sh \
+      chifra daemon --api on --scrape blooms --monitor"
     restart: unless-stopped
     volumes:
-      - "Index:/index"
-      - "Cache:/cache"
-      - "configuration:/configuration"
-  monitors:
-    depends_on:
-      - core
-    restart: unless-stopped
-    image: "trueblocks/monitors:develop"
-    environment:
-      REQUIRE_CONFIGURATION_TOOL: "true"
-      TB_DEFAULTCHAIN: mainnet
-      TB_CHAINS_MAINNET_CHAINID: 1
-      TB_CHAINS_MAINNET_RPCPROVIDER: null
-      TB_CHAINS_MAINNET_SYMBOL: ETH
-      TB_CHAINS_MAINNET_PINGATEWAY: "https://ipfs.unchainedindex.io/ipfs/"
-      TB_ETHERSCAN_KEY: null
-      MONITORS_FILE: export --appearances
-    volumes:
-      - "Index:/index"
-      - "Cache:/cache"
-      - "exports:/exports"
-      - "addresses:/addresses"
+      - "unchained:/index"
+      - "cache:/cache"
       - "configuration:/configuration"
   configure:
-    image: "configure.trueblocks.public.dappnode.eth:0.37.0"
-    build:
-      context: ./configuration/docker
-      args:
-        UPSTREAM_VER: feature/configuration_tool
+    image: "trueblocks/config:v0.44.0-beta"
     restart: unless-stopped
     volumes:
       - "configuration:/output"
 volumes:
-  Index: {}
-  Cache: {}
-  exports: {}
-  addresses: {}
+  unchained: {}
+  cache: {}
   configuration: {}

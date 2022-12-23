@@ -1,6 +1,6 @@
 {
   "name": "trueblocks.public.dappnode.eth",
-  "version": "0.37.0",
+  "version": "0.50.0",
   "shortDescription": "Lightweight indexing for any EVM-based blockchain",
   "description": "TrueBlocks is a collection of libraries, tools, and applications that improve access to the Ethereum data while remaining fully local. To configure, go to configure.trueblocks.public.dappnode",
   "type": "service",
@@ -10,9 +10,6 @@
   "contributors": [],
   "categories": ["Developer tools", "Blockchain", "Communications"],
   "keywords": ["trueblocks", "index", "indexing", "ipfs", "data"],
-  "globalEnvs": {
-    "all": true
-  },
   "backup": [],
   "exposable": [],
   "repository": {
@@ -21,6 +18,9 @@
   },
   "bugs": {
     "url": "https://github.com/TrueBlocks/trueblocks-dappnode/issues"
+  },
+  "warnings": {
+    "onInstall": "After installing TrueBlocks, please go to Packages -> TrueBlocks and click Settings link to configure this package."
   },
   "links": {
     "settings": "http://configure.trueblocks.public.dappnode",
