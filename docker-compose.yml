@@ -2,9 +2,6 @@ version: "3.4"
 services:
   core:
     image: "trueblocks/core:v0.50.0-beta"
-    # TODO: below line overrides core's entrypoint so that we can load
-    # TODO: the configuration saved by config tool. When we have this
-    # TODO: in chifra daemon, we should remove whole `entrypoint` section.
     entrypoint: |
       bash -c "\
       while [ ! -f /configuration/configuration.sh ] \
