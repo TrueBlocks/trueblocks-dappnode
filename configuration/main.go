@@ -18,7 +18,7 @@ type ConfigurationItem struct {
 	Rpc            string
 	ChainId        string
 	Symbol         string
-	// IpfsGateway    string
+	IpfsGateway    string
 	LocalExplorer  string
 	RemoteExplorer string
 	ScraperArgs    string
@@ -48,9 +48,9 @@ func EnvsFromConfiguration(item ConfigurationItem) string {
 	b.WriteString(prefix + "RPCPROVIDER=" + item.Rpc + "\n")
 	b.WriteString(prefix + "SYMBOL=" + item.Symbol + "\n")
 
-	// if item.IpfsGateway != "" {
-	// 	b.WriteString(prefix + "PINGATEWAY=" + item.IpfsGateway + "\n")
-	// }
+	if item.IpfsGateway != "" {
+		b.WriteString(prefix + "IPFSGATEWAY=" + item.IpfsGateway + "\n")
+	}
 	if item.LocalExplorer != "" {
 		b.WriteString(prefix + "LOCALEXPLORER=" + item.LocalExplorer + "\n")
 	}
