@@ -378,14 +378,14 @@
                         </span>
                     </div>
                 </label>
-                <label>
+                <!-- <label>
                     <span>
                         IPFS Gateway:
                     </span>
                     <div class="field">
                         <input type="url" name="ipfsGateway" placeholder="https://ipfs.unchainedindex.io/ipfs/">
                     </div>
-                </label>
+                </label> -->
                 <label>
                     <span>
                         Local Explorer:
@@ -494,6 +494,17 @@
                     </div>
                     <p class="explainer">
                         Etherscan API key is used to download ABI data
+                    </p>
+                </label>
+                <label>
+                    <span>
+                       IPFS Gateway
+                    </span>
+                    <div class="field">
+                        <input type="text" name="defaultGateway" placeholder="https://ipfs.unchainedindex.io/ipfs/">
+                    </div>
+                    <p class="explainer">
+                        Default IPFS Gateway
                     </p>
                 </label>
 
@@ -660,7 +671,7 @@
                     row.querySelector('[name=rpc]').value = item.Rpc || '';
                     row.querySelector('[name=chainId]').value = item.ChainId || '';
                     row.querySelector('[name=symbol]').value = item.Symbol || '';
-                    row.querySelector('[name=ipfsGateway]').value = item.IpfsGateway || '';
+                    // row.querySelector('[name=ipfsGateway]').value = item.IpfsGateway || '';
                     row.querySelector('[name=localExplorer]').value = item.LocalExplorer || '';
                     row.querySelector('[name=remoteExplorer]').value = item.RemoteExplorer || '';
                     row.querySelector('[name=scraperArgs]').value = item.ScraperArgs || '';
@@ -677,6 +688,7 @@
             form.querySelector('fieldset[name=global] [name=initBlooms][value=false]').checked = !globalConfig.InitBlooms;
 
             form.querySelector('fieldset[name=global] [name=etherscanKey]').value = globalConfig.EtherscanKey || '';
+            form.querySelector('fieldset[name=global] [name=defaultGateway]').value = globalConfig.DefaultGateway || 'https://ipfs.unchainedindex.io/ipfs/';
 
             form.querySelector('fieldset[name=global] [name=initIndex][value=true]').checked = globalConfig.InitIndex;
             form.querySelector('fieldset[name=global] [name=initIndex][value=false]').checked = !globalConfig.InitIndex;

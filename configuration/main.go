@@ -18,7 +18,7 @@ type ConfigurationItem struct {
 	Rpc            string
 	ChainId        string
 	Symbol         string
-	IpfsGateway    string
+	// IpfsGateway    string
 	LocalExplorer  string
 	RemoteExplorer string
 	ScraperArgs    string
@@ -32,6 +32,7 @@ type GlobalConfiguration struct {
 	MonitorArgs  string
 	MonitorFile  string
 	EtherscanKey string
+	DefaultGateway string
 }
 
 type ConfigurationPost struct {
@@ -47,9 +48,9 @@ func EnvsFromConfiguration(item ConfigurationItem) string {
 	b.WriteString(prefix + "RPCPROVIDER=" + item.Rpc + "\n")
 	b.WriteString(prefix + "SYMBOL=" + item.Symbol + "\n")
 
-	if item.IpfsGateway != "" {
-		b.WriteString(prefix + "PINGATEWAY=" + item.IpfsGateway + "\n")
-	}
+	// if item.IpfsGateway != "" {
+	// 	b.WriteString(prefix + "PINGATEWAY=" + item.IpfsGateway + "\n")
+	// }
 	if item.LocalExplorer != "" {
 		b.WriteString(prefix + "LOCALEXPLORER=" + item.LocalExplorer + "\n")
 	}
@@ -96,7 +97,8 @@ func SaveConfiguration(path string, config ConfigurationPost) (err error) {
 		fmt.Sprint("export RUN_SCRAPER=", config.Global.RunScraper),
 		fmt.Sprint("export BOOTSTRAP_BLOOM_FILTERS=", config.Global.InitBlooms),
 		fmt.Sprint("export BOOTSTRAP_FULL_INDEX=", config.Global.InitIndex),
-		fmt.Sprint("export TB_SETTINGS_ETHERSCANKEY=", normalizeUserInput(config.Global.EtherscanKey)),
+		fmt.Sprint("export TB_KEYS_ETHERSCAN_APIKEY=", normalizeUserInput(config.Global.EtherscanKey)),
+		fmt.Sprint("export TB_SETTINGS_DEFAULTGATEWAY=", config.Global.DefaultGateway),
 	}
 	if config.Global.MonitorArgs != "" {
 		lines = append(lines, fmt.Sprint("export MONITORS_ARGS=", normalizeUserInput(config.Global.MonitorArgs)))
