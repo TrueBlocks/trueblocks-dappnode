@@ -10,7 +10,13 @@
   "contributors": [],
   "categories": ["Developer tools", "Blockchain", "Communications"],
   "keywords": ["trueblocks", "index", "indexing", "ipfs", "data"],
-  "backup": [],
+  "backup": [
+    {
+      "name": "trueblocks_data",
+      "path": "/root/.local/share/trueblocks",
+      "service": "core"
+    }
+  ],
   "exposable": [],
   "repository": {
     "type": "git",

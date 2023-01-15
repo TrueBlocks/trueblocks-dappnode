@@ -1,29 +1,29 @@
-version: "3.4"
+version: "3.5"
 services:
   core:
     image: "trueblocks/core:v0.50.0-beta"
     entrypoint: |
       bash -c "\
-      while [ ! -f /configuration/configuration.sh ] \
+      while [ ! -f /configuration/entrypoint.sh ] \
       do \
           echo No configuration found. Please use TrueBlocks Configuration Tool first. \
           echo If you are using DAppNode, click Info tab above, then Settings link. \
           echo Will try to re-read the configuration in a few seconds \
           sleep 5 \
       done \
-      . /configuration/configuration.sh \
-      chifra daemon --api on --scrape blooms --monitor"
+      . /configuration/configuration.sh && \
+      sh /configuration/entrypoint.sh"
+    ports:
+      - "8080:8080/tcp"
     restart: unless-stopped
     volumes:
-      - "unchained:/index"
-      - "cache:/cache"
       - "configuration:/configuration"
+      - "trueblocks:/root/.local/share/trueblocks"
   configure:
     image: "trueblocks/config:v0.44.0-beta"
     restart: unless-stopped
     volumes:
       - "configuration:/output"
 volumes:
-  unchained: {}
-  cache: {}
   configuration: {}
+  trueblocks: {}

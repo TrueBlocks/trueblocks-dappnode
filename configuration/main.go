@@ -114,6 +114,37 @@ func SaveConfiguration(path string, config ConfigurationPost) (err error) {
 	return err
 }
 
+func SaveEntrypointScript(path string, config ConfigurationPost) (err error) {
+	scraperOpts := "off"
+	if (config.Global.RunScraper && config.Global.InitBlooms) {
+		scraperOpts = "blooms"
+	}
+	if (config.Global.RunScraper && config.Global.InitIndex) {
+		scraperOpts = "full-index"
+	}
+	cmdOpts := []string{
+		"chifra daemon",
+		"--api on",
+		"--scrape",
+		scraperOpts,
+		"--monitor",
+	}
+	
+	script := []string{
+		"#!/bin/bash",
+		"",
+		strings.Join(cmdOpts, " "),
+		"",
+	}
+	
+	err = WriteEnvFile(path, strings.Join(script, "\n"))
+	if err != nil {
+		return err
+	}
+	err = os.Chmod(path, 0700)
+	return err
+}
+
 func SaveJson(path string, config ConfigurationPost) (err error) {
 	contents, err := json.MarshalIndent(config, "", "	")
 	if err != nil {
@@ -160,6 +191,11 @@ func makeConfigurationHandler(outputDir string) http.HandlerFunc {
 			err = SaveConfiguration(path.Join(outputDir, "configuration.sh"), p)
 			if err != nil {
 				http.Error(w, fmt.Sprintf("Could not save configuration file: %s", err), http.StatusInternalServerError)
+				return
+			}
+			err = SaveEntrypointScript(path.Join(outputDir, "entrypoint.sh"), p)
+			if err != nil {
+				http.Error(w, fmt.Sprintf("Could not update entrypoint script: %s", err), http.StatusInternalServerError)
 				return
 			}
 			err = SaveJson(path.Join(outputDir, "configuration.json"), p)
