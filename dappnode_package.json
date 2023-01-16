@@ -4,7 +4,6 @@
   "shortDescription": "Lightweight indexing for any EVM-based blockchain",
   "description": "TrueBlocks is a collection of libraries, tools, and applications that improve access to the Ethereum data while remaining fully local. To configure, go to configure.trueblocks.public.dappnode",
   "type": "service",
-  "chain": "ethereum",
   "mainService": "core",
   "author": "TrueBlocks, LLC. (https://trueblocks.io)",
   "contributors": [],
