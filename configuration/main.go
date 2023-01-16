@@ -32,6 +32,7 @@ type GlobalConfiguration struct {
 	MonitorArgs  string
 	MonitorFile  string
 	EtherscanKey string
+	DefaultGateway string
 }
 
 type ConfigurationPost struct {
@@ -48,7 +49,7 @@ func EnvsFromConfiguration(item ConfigurationItem) string {
 	b.WriteString(prefix + "SYMBOL=" + item.Symbol + "\n")
 
 	if item.IpfsGateway != "" {
-		b.WriteString(prefix + "PINGATEWAY=" + item.IpfsGateway + "\n")
+		b.WriteString(prefix + "IPFSGATEWAY=" + item.IpfsGateway + "\n")
 	}
 	if item.LocalExplorer != "" {
 		b.WriteString(prefix + "LOCALEXPLORER=" + item.LocalExplorer + "\n")
@@ -96,7 +97,8 @@ func SaveConfiguration(path string, config ConfigurationPost) (err error) {
 		fmt.Sprint("export RUN_SCRAPER=", config.Global.RunScraper),
 		fmt.Sprint("export BOOTSTRAP_BLOOM_FILTERS=", config.Global.InitBlooms),
 		fmt.Sprint("export BOOTSTRAP_FULL_INDEX=", config.Global.InitIndex),
-		fmt.Sprint("export TB_SETTINGS_ETHERSCANKEY=", normalizeUserInput(config.Global.EtherscanKey)),
+		fmt.Sprint("export TB_KEYS_ETHERSCAN_APIKEY=", normalizeUserInput(config.Global.EtherscanKey)),
+		fmt.Sprint("export TB_SETTINGS_DEFAULTGATEWAY=", config.Global.DefaultGateway),
 	}
 	if config.Global.MonitorArgs != "" {
 		lines = append(lines, fmt.Sprint("export MONITORS_ARGS=", normalizeUserInput(config.Global.MonitorArgs)))
@@ -109,6 +111,37 @@ func SaveConfiguration(path string, config ConfigurationPost) (err error) {
 		lines = append(lines, EnvsFromConfiguration(item))
 	}
 	err = WriteEnvFile(path, strings.Join(lines, "\n"))
+	return err
+}
+
+func SaveEntrypointScript(path string, config ConfigurationPost) (err error) {
+	scraperOpts := "off"
+	if (config.Global.RunScraper && config.Global.InitBlooms) {
+		scraperOpts = "blooms"
+	}
+	if (config.Global.RunScraper && config.Global.InitIndex) {
+		scraperOpts = "full-index"
+	}
+	cmdOpts := []string{
+		"chifra daemon",
+		"--api on",
+		"--scrape",
+		scraperOpts,
+		"--monitor",
+	}
+	
+	script := []string{
+		"#!/bin/bash",
+		"",
+		strings.Join(cmdOpts, " "),
+		"",
+	}
+	
+	err = WriteEnvFile(path, strings.Join(script, "\n"))
+	if err != nil {
+		return err
+	}
+	err = os.Chmod(path, 0700)
 	return err
 }
 
@@ -158,6 +191,11 @@ func makeConfigurationHandler(outputDir string) http.HandlerFunc {
 			err = SaveConfiguration(path.Join(outputDir, "configuration.sh"), p)
 			if err != nil {
 				http.Error(w, fmt.Sprintf("Could not save configuration file: %s", err), http.StatusInternalServerError)
+				return
+			}
+			err = SaveEntrypointScript(path.Join(outputDir, "entrypoint.sh"), p)
+			if err != nil {
+				http.Error(w, fmt.Sprintf("Could not update entrypoint script: %s", err), http.StatusInternalServerError)
 				return
 			}
 			err = SaveJson(path.Join(outputDir, "configuration.json"), p)

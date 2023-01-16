@@ -496,6 +496,17 @@
                         Etherscan API key is used to download ABI data
                     </p>
                 </label>
+                <label>
+                    <span>
+                       IPFS Gateway
+                    </span>
+                    <div class="field">
+                        <input type="text" name="defaultGateway" placeholder="https://ipfs.unchainedindex.io/ipfs/">
+                    </div>
+                    <p class="explainer">
+                        Default IPFS Gateway
+                    </p>
+                </label>
 
                 <details>
                     <summary>Advanced settings</summary>
@@ -677,6 +688,7 @@
             form.querySelector('fieldset[name=global] [name=initBlooms][value=false]').checked = !globalConfig.InitBlooms;
 
             form.querySelector('fieldset[name=global] [name=etherscanKey]').value = globalConfig.EtherscanKey || '';
+            form.querySelector('fieldset[name=global] [name=defaultGateway]').value = globalConfig.DefaultGateway || 'https://ipfs.unchainedindex.io/ipfs/';
 
             form.querySelector('fieldset[name=global] [name=initIndex][value=true]').checked = globalConfig.InitIndex;
             form.querySelector('fieldset[name=global] [name=initIndex][value=false]').checked = !globalConfig.InitIndex;

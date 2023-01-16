@@ -7,8 +7,8 @@ RUN apk --no-cache add git nano
 # Set workdir
 WORKDIR /root
 
-# Try to get upstream version (default v0.37.0-beta)
-ARG UPSTREAM_VER=v0.37.0-beta
+# Try to get upstream version (default v0.44.0-beta)
+ARG UPSTREAM_VER=v0.44.0-beta
 
 # Clone and make TrueBlocks Core
 # make -j 5 is a fairly safe number
