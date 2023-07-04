@@ -1,37 +1,13 @@
 {
   "name": "trueblocks.public.dappnode.eth",
-  "version": "0.50.0",
-  "shortDescription": "Lightweight indexing for any EVM-based blockchain",
-  "description": "TrueBlocks is a collection of libraries, tools, and applications that improve access to the Ethereum data while remaining fully local. To configure, go to configure.trueblocks.public.dappnode",
+  "version": "0.0.7",
+  "upstreamVersion": "0.70.0-beta",
+  "description": "TrueBlocks packaged for DAppNode",
   "type": "service",
-  "mainService": "core",
-  "author": "TrueBlocks, LLC. (https://trueblocks.io)",
-  "contributors": [],
-  "categories": ["Developer tools", "Blockchain", "Communications"],
-  "keywords": ["trueblocks", "index", "indexing", "ipfs", "data"],
-  "backup": [
-    {
-      "name": "trueblocks_data",
-      "path": "/root/.local/share/trueblocks",
-      "service": "core"
-    }
-  ],
-  "exposable": [],
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/TrueBlocks/trueblocks-dappnode"
-  },
-  "bugs": {
-    "url": "https://github.com/TrueBlocks/trueblocks-dappnode/issues"
-  },
-  "warnings": {
-    "onInstall": "After installing TrueBlocks, please go to Packages -> TrueBlocks and click Settings link to configure this package."
-  },
+  "author": "geleeroyale",
+  "categories": ["Developer tools"],
   "links": {
-    "settings": "http://configure.trueblocks.public.dappnode",
-    "api": "http://trueblocks.public.dappnode:8080",
-    "readme": "https://github.com/TrueBlocks/trueblocks-dappnode",
     "homepage": "https://trueblocks.io"
   },
-  "license": "GLP-3.0"
+  "license": "GPL-3.0"
 }

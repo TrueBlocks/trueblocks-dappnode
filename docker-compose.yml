@@ -1,29 +1,19 @@
 version: "3.5"
 services:
-  core:
-    image: "trueblocks/core:v0.50.0-beta"
-    entrypoint: |
-      bash -c "\
-      while [ ! -f /configuration/entrypoint.sh ] \
-      do \
-          echo No configuration found. Please use TrueBlocks Configuration Tool first. \
-          echo If you are using DAppNode, click Info tab above, then Settings link. \
-          echo Will try to re-read the configuration in a few seconds \
-          sleep 5 \
-      done \
-      . /configuration/configuration.sh && \
-      sh /configuration/entrypoint.sh"
+  trueblocks.public.dappnode.eth:
+    build: .
+    image: "trueblocks.public.dappnode.eth:0.0.7"
+    environment:
+      TB_SETTINGS_DEFAULTCHAIN: mainnet
+      TB_CHAINS_MAINNET_RPCPROVIDER: "http://erigon.dappnode:8545"
+      TB_SETTINGS_CACHEPATH: /cache
+      TB_SETTINGS_INDEXPATH: /unchained
+    restart: unless-stopped
     ports:
-      - "8080:8080/tcp"
-    restart: unless-stopped
+      - "8085:8080"
     volumes:
-      - "configuration:/configuration"
-      - "trueblocks:/root/.local/share/trueblocks"
-  configure:
-    image: "trueblocks/config:v0.44.0-beta"
-    restart: unless-stopped
-    volumes:
-      - "configuration:/output"
+      - "cache:/cache"
+      - "unchained:/unchained"
 volumes:
-  configuration: {}
-  trueblocks: {}
+  cache: {}
+  unchained: {}
