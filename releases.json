@@ -4,5 +4,29 @@
     "uploadedTo": {
       "http://172.33.1.5:5001": "Thu, 15 Jun 2023 12:10:27 GMT"
     }
+  },
+  "0.1.0": {
+    "hash": "/ipfs/QmNcghRgQHxY8ytwhJnKTeU5ohkb4N7fN1qZfYJkPJQcmx",
+    "uploadedTo": {
+      "http://172.33.1.5:5001": "Thu, 15 Jun 2023 13:52:52 GMT"
+    }
+  },
+  "0.1.1": {
+    "hash": "/ipfs/Qme1zwZQ2PdpG6MqiaZWAocmnPhCzCVzV1Kxow8eatMYW7",
+    "uploadedTo": {
+      "http://172.33.1.5:5001": "Thu, 15 Jun 2023 14:04:41 GMT"
+    }
+  },
+  "0.1.2": {
+    "hash": "/ipfs/Qma4AuNe2vvSHqkJLxYThVZRn6oFLmXEZJ4XGruy4Tq2LP",
+    "uploadedTo": {
+      "http://172.33.1.5:5001": "Thu, 15 Jun 2023 14:25:53 GMT"
+    }
+  },
+  "0.0.6": {
+    "hash": "/ipfs/QmeXiHfhar45Y9M494Ykc3Tp8jYzer2gxjzzDoRNZa5sP1",
+    "uploadedTo": {
+      "http://172.33.1.5:5001": "Thu, 15 Jun 2023 15:09:53 GMT"
+    }
   }
 }

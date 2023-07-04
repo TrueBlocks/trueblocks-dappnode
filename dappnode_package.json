@@ -1,6 +1,7 @@
 {
   "name": "trueblocks.public.dappnode.eth",
-  "version": "0.1.0",
+  "version": "0.0.7",
+  "upstreamVersion": "0.70.0-beta",
   "description": "TrueBlocks packaged for DAppNode",
   "type": "service",
   "author": "geleeroyale",

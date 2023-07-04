@@ -2,7 +2,7 @@ version: "3.5"
 services:
   trueblocks.public.dappnode.eth:
     build: .
-    image: "trueblocks.public.dappnode.eth:0.1.0"
+    image: "trueblocks.public.dappnode.eth:0.0.7"
     environment:
       TB_SETTINGS_DEFAULTCHAIN: mainnet
       TB_CHAINS_MAINNET_RPCPROVIDER: "http://erigon.dappnode:8545"
